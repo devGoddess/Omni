@@ -48,6 +48,30 @@ namespace D3D {
 	};
 
 
+	//	bounding box structure for collision detection and particle systems
+	struct BoundingBox {
+
+		BoundingBox();
+
+		//	compares point to bounding vectors
+		bool isPointInside(D3DXVECTOR3 &point);
+		//	collision between bounding boxes
+		bool isCollision(BoundingBox &box);
+
+		D3DXVECTOR3 _min, _max;
+	};
+
+
+	//	overloaded operators for comparing vectors
+	bool operator<=(const D3DXVECTOR3 &a, const D3DXVECTOR3 &b);
+	bool operator>=(const D3DXVECTOR3 &a, const D3DXVECTOR3 &b);
+
+
+	//	distance checking function for 3D vectors
+	float getDistance(D3DXVECTOR3 &a, D3DXVECTOR3 &b);
+
+
+	//	release method
 	template<class T> void Release(T t)
 	{
 		if (t)
@@ -57,6 +81,7 @@ namespace D3D {
 		}
 	}
 
+	//	delete method
 	template<class T> void Delete(T t)
 	{
 		if (t)

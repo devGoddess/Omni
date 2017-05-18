@@ -11,10 +11,10 @@ GameState::~GameState()
 {
 }
 
-void GameState::GameLoop(float deltaTime)
+void GameState::GameLoop()
 {
 
 	currentState->Render();
-	currentState->Update(deltaTime);
+	currentState->Update();
 
 }

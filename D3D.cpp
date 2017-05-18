@@ -150,3 +150,48 @@ float D3D::Lerp(float a, float b, float t)
 {
 	return a - (a*t) + (b*t);
 }
+
+bool D3D::operator<=(const D3DXVECTOR3 & a, const D3DXVECTOR3 & b)
+{
+	if(a.x <= b.x && a.y <= b.y && a.z <= b.z)
+		return true;
+	return false;
+}
+
+bool D3D::operator>=(const D3DXVECTOR3 & a, const D3DXVECTOR3 & b)
+{
+	if (a.x >= b.x && a.y >= b.y && a.z >= b.z)
+		return true;
+	return false;
+}
+
+float D3D::getDistance(D3DXVECTOR3 & a, D3DXVECTOR3 & b)
+{
+	return (float)sqrt(((b.x - a.x)*(b.x - a.x)) + ((b.y - a.y)*(b.y - a.y)) + ((b.z - a.z)*(b.z - a.z)));
+}
+
+//	default constructor for bounding box structure -- sets default _min and _max to INFINITY
+D3D::BoundingBox::BoundingBox() : _min(-INFINITY, -INFINITY, -INFINITY), _max(INFINITY, INFINITY, INFINITY)
+{
+}
+
+bool D3D::BoundingBox::isPointInside(D3DXVECTOR3 & point)
+{
+	//	if the point is less than the max and greater than the min
+	if (point <= _max && point >= _min)
+		return true;
+
+	return false;
+}
+
+bool D3D::BoundingBox::isCollision(BoundingBox & box)
+{
+	//	check to see if box._min is inside our bounding vectors
+	if (isPointInside(box._min))
+		return true;
+	//	check to see if box._min is inside our bounding vectors
+	if (isPointInside(box._max))
+		return true;
+
+	return false;
+}

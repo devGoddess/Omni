@@ -1,4 +1,5 @@
 #include "GameWorld.h"
+#include "GameTimer.h"
 #include <time.h>
 
 IDirect3DDevice9 *Device;
@@ -7,6 +8,10 @@ HWND hwnd;
 GameState *currentState, *previousState;
 GameState *gameWorld = new GameWorld();
 
+GameTimer timer;
+
+
+//	WinProc
 LRESULT CALLBACK D3D::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 
 	switch (msg) {
@@ -24,20 +29,26 @@ LRESULT CALLBACK D3D::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
-
-
+//-----------//
+//	WinMain
+//-----------//
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevinstances, LPSTR cmdLine, int showCmd) {
 
-	float currentTime = 0, lastTime = 0, deltaTime;
+	// cast the state types from generic GameState to their true state
+	reinterpret_cast<GameWorld&>(gameWorld);
 
+
+	//	set the initial state
 	currentState = gameWorld;
 
 	MSG msg;
 	ZeroMemory(&msg, sizeof(MSG));
 
+	//	initialize the window
 	D3D::InitWindow(hInstance);
 	ShowWindow(hwnd, SW_SHOW);
 
+	//	initialize the directx stuff
 	D3D::InitD3D();
 
 
@@ -49,12 +60,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevinstances, LPSTR cmdLine,
 			DispatchMessage(&msg);
 		}
 		else {
-			currentTime = timeGetTime();
-			deltaTime = currentTime - lastTime;
+			timer.Tick();
 
-			currentState->GameLoop(deltaTime);
+			currentState->GameLoop();
 
-			lastTime = currentTime;
 			srand(time(NULL));
 
 		}
@@ -63,7 +72,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevinstances, LPSTR cmdLine,
 
 	}
 
-	Device->Release();
+	//	get rid of all extern variables
+	D3D::Release<IDirect3DDevice9*>(Device);
+	D3D::Delete(gameWorld);
+
+
 
 	return msg.wParam;
 }

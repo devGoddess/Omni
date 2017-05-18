@@ -123,8 +123,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Character.cpp" />
     <ClCompile Include="D3D.cpp" />
     <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="GameWorld.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mesh.cpp" />
@@ -133,8 +135,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Character.h" />
     <ClInclude Include="D3D.h" />
     <ClInclude Include="GameState.h" />
+    <ClInclude Include="GameTimer.h" />
     <ClInclude Include="GameWorld.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Skybox.h" />

@@ -29,17 +29,20 @@ bool GameWorld::Init()
 	Device->SetLight(2, &pointLight);
 	Device->LightEnable(2, TRUE);
 
-	Device->SetRenderState(D3DRS_LIGHTING, true);
+	//	turn on lighting
+	//	Device->SetRenderState(D3DRS_LIGHTING, true);
 
 	testMesh.Initialize("models/acr.x");
 
-	Device->SetRenderState(D3DRS_SPECULARENABLE, true);
+	//	Device->SetRenderState(D3DRS_SPECULARENABLE, true);
 
 	skybox.generate();
 
 	terrain = new Terrain("textures/heightMap.raw", 1981, 1981, 10, .005f);
 	terrain->genTexture(&D3DXVECTOR3(0.0, -1.0f, 0.0f));
 	terrain->loadTexture("textures/terrain.png");
+
+	knight.Initialize(Character::KNIGHT);
 
 	return true;
 }
@@ -59,12 +62,18 @@ void GameWorld::Render()
 {
 
 	//	set view matrix
-	D3DXMATRIX V;
+	/*D3DXMATRIX V;
 	cam.getViewMatrix(&V);
 	Device->SetTransform(D3DTS_VIEW, &V);
 
-	cam._pos.y = terrain->getHeight(cam._pos.x, cam._pos.z) + 25;
+	cam._pos.y = terrain->getHeight(cam._pos.x, cam._pos.z) + 25;*/
 
+	D3DXMATRIX V;
+	D3DXVECTOR3 cameraPosition = ((-knight._look + knight._up) * 100) + knight._pos;
+	D3DXMatrixLookAtLH(&V, &cameraPosition, &knight._pos, &D3DXVECTOR3(0, 1, 0));
+	Device->SetTransform(D3DTS_VIEW, &V);
+
+	knight._pos.y = terrain->getHeight(knight._pos.y, knight._pos.z);
 
 	if (Device) {
 
@@ -90,22 +99,28 @@ void GameWorld::Render()
 		Device->SetTransform(D3DTS_WORLD, &(R*W));
 		testMesh.Render();
 
+		//	render knight
+		knight.Render();
+
 
 		Device->EndScene();
 		Device->Present(0, 0, 0, 0);
 	}
 }
 
-void GameWorld::Update(float deltaTime)
+void GameWorld::Update()
 {
+
+	knight.Update();
+
 	if (GetKeyState(VK_UP) & 0x800)
-		cam.pitch(-deltaTime * .001);
+		cam.pitch(-timer.DeltaTime());
 	if (GetKeyState(VK_DOWN) & 0x800)
-		cam.pitch(deltaTime * .001);
+		cam.pitch(timer.DeltaTime());
 	if (GetKeyState(VK_LEFT) & 0x800)
-		cam.yaw(-deltaTime * .001);
+		cam.yaw(-timer.DeltaTime());
 	if (GetKeyState(VK_RIGHT) & 0x800)
-		cam.yaw(deltaTime * .001);
+		cam.yaw(timer.DeltaTime());
 }
 
 void GameWorld::Exit(GameState * nextState)

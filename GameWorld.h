@@ -6,6 +6,7 @@
 #include "Mesh.h"
 #include "Skybox.h"
 #include "Terrain.h"
+#include "Character.h"
 
 class GameWorld : public GameState
 {
@@ -16,7 +17,7 @@ public:
 	bool Init();
 	void Enter();
 	void Render();
-	void Update(float deltaTime);
+	void Update();
 	void Exit(GameState *nextState);
 
 	D3DLIGHT9 worldLight;
@@ -30,6 +31,10 @@ public:
 
 	Skybox skybox;
 	Terrain *terrain = 0;
+
+	Character knight;
+
+
 };
 
 #endif

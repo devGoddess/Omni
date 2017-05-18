@@ -35,28 +35,28 @@ bool Skybox::generate()
 		//Back
 		{ size, -size, -size, 0,1 },
 		{ size, size, -size, 0,0 },
-		{ -size,-size, -size, 1,1 },
-		{ -size,size, -size, 1,0 },
+		{ -size, -size, -size, 1,1 },
+		{ -size, size, -size, 1,0 },
 		//Left
 		{ -size, -size, -size, 0,1 },
 		{ -size, size, -size, 0,0 },
-		{ -size,-size, size, 1,1 },
+		{ -size, -size, size, 1,1 },
 		{ -size, size, size, 1,0 },
 		//Right
-		{ size,-size,size, 0,1 },
-		{ size,size,size, 0,0 },
-		{ size,-size,-size, 1,1 },
-		{ size,size,-size, 1,0 },
+		{ size, -size, size, 0,1 },
+		{ size, size, size, 0,0 },
+		{ size, -size, -size, 1,1 },
+		{ size, size, -size, 1,0 },
 		//Top
-		{ -size,size,size, 0,1 },
-		{ -size,size,-size, 0,0 },
-		{ size,size,size, 1,1 },
-		{ size,size,-size, 1,0 },
+		{ -size, size, size, 0,1 },
+		{ -size, size, -size, 0,0 },
+		{ size, size, size, 1,1 },
+		{ size, size, -size, 1,0 },
 		//Bottom
-		{ -size,-size,-size, 0,1 },
-		{ -size,-size,size, 0,0 },
-		{ size,-size,-size, 1,1 },
-		{ size,-size,size, 1,0 }
+		{ -size, -size, -size, 0,1 },
+		{ -size, -size, size, 0,0 },
+		{ size, -size, -size, 1,1 },
+		{ size, -size, size, 1,0 }
 	};
 	HRESULT hRet;
 	hRet = Device->CreateVertexBuffer((int)sizeof(D3D::EVertex) * 24, 0, D3D::EVertex::FVF,
@@ -87,9 +87,11 @@ bool Skybox::generate()
 
 void Skybox::render()
 {
-	//Device->SetRenderState(D3DRS_LIGHTING, false);
+	//	disable lighting and z-buffer
+	Device->SetRenderState(D3DRS_LIGHTING, false);
 	Device->SetRenderState(D3DRS_ZENABLE, false);
-	//clamping to get rid of seams
+
+	// set address mode to clamp to hide of seams
 	Device->SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
 	Device->SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
 
@@ -101,5 +103,7 @@ void Skybox::render()
 		Device->DrawPrimitive(D3DPT_TRIANGLESTRIP, (int)i * 4, 2);
 	}
 
+	//	enable lighting and z-buffer
+	Device->SetRenderState(D3DRS_LIGHTING, true);
 	Device->SetRenderState(D3DRS_ZENABLE, true);
 }
